@@ -6,14 +6,14 @@ class CustomTextFormField extends StatefulWidget {
     this.obscureText = false,
     super.key,
     required this.controllerl,
-    required this.validator,
+     this.validator,
     this.keyboardType,
     required this.hintText,
     required this.prefixIcon,
   });
 
   final TextEditingController controllerl;
-  final String? Function(String?) validator;
+  final String? Function(String?)? validator;
   final Widget prefixIcon;
   final TextInputType? keyboardType;
   final String hintText;

@@ -7,6 +7,20 @@ class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  
+Future<UserModel?> getUser(String uid) async {
+  final doc = await _firestore
+      .collection('users')
+      .doc(uid)
+      .get();
+
+  if (!doc.exists || doc.data() == null) {
+    return null;
+  }
+
+  return UserModel.fromJson(doc.data()!);
+}
+
 
   Future<UserCredential> registerWithEmail({
     required String name,

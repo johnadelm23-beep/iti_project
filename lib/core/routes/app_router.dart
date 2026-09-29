@@ -4,6 +4,7 @@ import 'package:iti_training/core/di/service_locator.dart';
 import 'package:iti_training/features/auth/presentation/cubit/cubit/auth_cubit.dart';
 import 'package:iti_training/features/auth/presentation/ui/screens/login_screen.dart';
 import 'package:iti_training/features/auth/presentation/ui/screens/register_screen.dart';
+import 'package:iti_training/features/home/presentation/ui/screens/home_screen.dart';
 import 'app_routes.dart';
 
 class AppRouter {
@@ -29,7 +30,7 @@ class AppRouter {
 
       case AppRoutes.home:
         return _fadeRoute(
-          const Placeholder(),
+          const HomeScreen(),
           settings,
         );
 
