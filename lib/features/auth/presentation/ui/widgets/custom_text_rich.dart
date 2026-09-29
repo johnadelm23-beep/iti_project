@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iti_training/core/routes/app_routes.dart';
 import 'package:iti_training/core/theme/app_colors.dart';
 
 class CustomTextRich extends StatelessWidget {

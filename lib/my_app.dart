@@ -8,7 +8,7 @@ import 'package:iti_training/core/routes/app_routes.dart';
 import 'package:iti_training/features/auth/presentation/cubit/cubit/auth_cubit.dart';
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

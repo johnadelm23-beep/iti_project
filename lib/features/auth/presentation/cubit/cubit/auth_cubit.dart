@@ -1,6 +1,6 @@
-import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:iti_training/features/auth/data/repo/auth_repo.dart';
 import 'auth_state.dart';
 
@@ -58,31 +58,43 @@ class AuthCubit extends Cubit<AuthState> {
       );
     }
   }
-Future<void> signInWithGoogle() async {
-  emit(AuthLoading());
 
-  try {
-    final result = await _authRepository.signInWithGoogle();
+  Future<void> signInWithGoogle() async {
+    emit(AuthLoading());
 
-    if (result == null) {
-      emit(AuthInitial());
-      return;
+    try {
+      final result = await _authRepository.signInWithGoogle();
+
+      if (result == null) {
+        emit(AuthInitial());
+        return;
+      }
+
+      emit(AuthSuccess());
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Firebase Auth Error: ${e.code}');
+      debugPrint('Firebase Auth Message: ${e.message}');
+      emit(AuthError(_getErrorMessage(e.code)));
+    } catch (e) {
+      debugPrint('Google Sign-In Error: $e');
+      emit(
+        AuthError(
+          e.toString(),
+        ),
+      );
     }
-
-    emit(AuthSuccess());
-  } on FirebaseAuthException catch (e) {
-    debugPrint('Firebase Auth Error: ${e.code}');
-    debugPrint('Firebase Auth Message: ${e.message}');
-    emit(AuthError(_getErrorMessage(e.code)));
-  } catch (e) {
-    debugPrint('Google Sign-In Error: $e');
-    emit(
-      AuthError(
-        e.toString(),
-      ),
-    );
   }
-}
+
+  Future<void> signOut() async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.signOut();
+      emit(AuthInitial());
+    } catch (e) {
+      emit(AuthError('Failed to sign out. Please try again.'));
+    }
+  }
+
   String _getErrorMessage(String code) {
     switch (code) {
       case 'email-already-in-use':
