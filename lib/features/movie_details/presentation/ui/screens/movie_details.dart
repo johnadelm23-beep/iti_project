@@ -5,6 +5,9 @@ import 'package:iti_training/core/di/service_locator.dart';
 import 'package:iti_training/core/theme/app_colors.dart';
 import 'package:iti_training/features/movie_details/presentation/cubit/cubit/movie_details_cubit.dart';
 import 'package:iti_training/features/movie_details/presentation/ui/widgets/info_item.dart';
+import 'package:iti_training/features/wishlist/data/models/wish_list_model.dart';
+import 'package:iti_training/features/wishlist/presentation/cubit/cubit/wish_list_cubit.dart';
+import 'package:iti_training/features/wishlist/presentation/cubit/cubit/wish_list_state.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final int movieId;
@@ -16,9 +19,16 @@ class MovieDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<MovieDetailsCubit>()
-        ..getMovieDetails(movieId),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<MovieDetailsCubit>()
+            ..getMovieDetails(movieId),
+        ),
+        BlocProvider(
+          create: (_) => getIt<WishlistCubit>()..loadWishlist(),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
@@ -56,11 +66,81 @@ class MovieDetailsScreen extends StatelessWidget {
                   SliverAppBar(
                     expandedHeight: 300.h,
                     pinned: true,
-                    backgroundColor: AppColors.scaffoldBackground,
+                    backgroundColor:
+                        AppColors.scaffoldBackground,
                     iconTheme: IconThemeData(
                       color: Colors.white,
                       size: 26.sp,
                     ),
+                    actions: [
+                      BlocBuilder<WishlistCubit, WishlistState>(
+                        builder: (context, wishlistState) {
+                          final wishlistCubit =
+                              context.read<WishlistCubit>();
+
+                          final isInWishlist =
+                              wishlistCubit.isMovieInWishlist(
+                            movie.id,
+                          );
+
+                          final isLoading =
+                              wishlistState
+                                  is WishlistActionLoading;
+
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              right: 12.w,
+                            ),
+                            child: Material(
+                              color: Colors.black.withValues(
+                                alpha: 0.45,
+                              ),
+                              shape: const CircleBorder(),
+                              child: InkWell(
+                                customBorder:
+                                    const CircleBorder(),
+                                onTap: isLoading
+                                    ? null
+                                    : () {
+                                        wishlistCubit.toggleMovie(
+                                          WishlistMovieModel(
+                                            id: movie.id,
+                                            title: movie.title,
+                                            posterUrl:
+                                                movie.posterUrl,
+                                            rating: movie.rating,
+                                          ),
+                                        );
+                                      },
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.all(9.r),
+                                  child: isLoading
+                                      ? SizedBox(
+                                          width: 20.w,
+                                          height: 20.h,
+                                          child:
+                                              CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : Icon(
+                                          isInWishlist
+                                              ? Icons
+                                                  .bookmark_rounded
+                                              : Icons
+                                                  .bookmark_border_rounded,
+                                          size: 23.sp,
+                                          color: Colors.white,
+                                        ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                     flexibleSpace: FlexibleSpaceBar(
                       background: Stack(
                         fit: StackFit.expand,
@@ -69,7 +149,8 @@ class MovieDetailsScreen extends StatelessWidget {
                               ? Image.network(
                                   movie.backdropUrl,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) {
+                                  errorBuilder:
+                                      (_, __, ___) {
                                     return Container(
                                       color: AppColors.surface,
                                     );
@@ -100,7 +181,8 @@ class MovieDetailsScreen extends StatelessWidget {
                         horizontal: 16.w,
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 12.h),
                           Row(
@@ -140,8 +222,8 @@ class MovieDetailsScreen extends StatelessWidget {
                                         child: Icon(
                                           Icons.movie_outlined,
                                           size: 40.sp,
-                                          color:
-                                              AppColors.textPrimary,
+                                          color: AppColors
+                                              .textPrimary,
                                         ),
                                       ),
                               ),
@@ -202,7 +284,7 @@ class MovieDetailsScreen extends StatelessWidget {
                                       SizedBox(height: 10.h),
                                       Text(
                                         movie.releaseDate
-                                            .isNotEmpty
+                                                .isNotEmpty
                                             ? movie.releaseDate
                                             : 'Unknown',
                                         style: TextStyle(
@@ -222,11 +304,14 @@ class MovieDetailsScreen extends StatelessWidget {
                             SizedBox(
                               height: 36.h,
                               child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: movie.genres.length,
+                                scrollDirection:
+                                    Axis.horizontal,
+                                itemCount:
+                                    movie.genres.length,
                                 separatorBuilder: (_, __) =>
                                     SizedBox(width: 8.w),
-                                itemBuilder: (context, index) {
+                                itemBuilder:
+                                    (context, index) {
                                   return Container(
                                     padding:
                                         EdgeInsets.symmetric(
@@ -265,7 +350,8 @@ class MovieDetailsScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontStyle: FontStyle.italic,
-                                color: AppColors.textSecondary,
+                                color:
+                                    AppColors.textSecondary,
                               ),
                             ),
                             SizedBox(height: 18.h),
@@ -286,7 +372,8 @@ class MovieDetailsScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               height: 1.6,
-                              color: AppColors.textSecondary,
+                              color:
+                                  AppColors.textSecondary,
                             ),
                           ),
                           SizedBox(height: 24.h),
@@ -294,7 +381,8 @@ class MovieDetailsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: InfoItem(
-                                  icon: Icons.timer_outlined,
+                                  icon:
+                                      Icons.timer_outlined,
                                   title: 'Runtime',
                                   value: movie.runtime > 0
                                       ? '${movie.runtime} min'
@@ -304,11 +392,13 @@ class MovieDetailsScreen extends StatelessWidget {
                               SizedBox(width: 12.w),
                               Expanded(
                                 child: InfoItem(
-                                  icon: Icons.info_outline,
+                                  icon:
+                                      Icons.info_outline,
                                   title: 'Status',
-                                  value: movie.status.isNotEmpty
-                                      ? movie.status
-                                      : 'Unknown',
+                                  value:
+                                      movie.status.isNotEmpty
+                                          ? movie.status
+                                          : 'Unknown',
                                 ),
                               ),
                             ],

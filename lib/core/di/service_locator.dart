@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:iti_training/core/network/api_constants.dart';
 import 'package:iti_training/core/network/api_service.dart';
@@ -7,6 +9,8 @@ import 'package:iti_training/features/auth/presentation/cubit/cubit/auth_cubit.d
 import 'package:iti_training/features/home/data/repo/home_repo.dart';
 import 'package:iti_training/features/home/presentation/cubit/cubit/home_cubit.dart';
 import 'package:iti_training/features/movie_details/presentation/cubit/cubit/movie_details_cubit.dart';
+import 'package:iti_training/features/wishlist/data/repo/wish_list_repo.dart';
+import 'package:iti_training/features/wishlist/presentation/cubit/cubit/wish_list_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -50,6 +54,18 @@ void setupServiceLocator() {
   getIt.registerFactory<MovieDetailsCubit>(
   () => MovieDetailsCubit(
     getIt<HomeRepo>(),
+  ),
+);
+getIt.registerLazySingleton<WishlistRepo>(
+  () => WishlistRepo(
+    FirebaseFirestore.instance,
+    FirebaseAuth.instance,
+  ),
+);
+
+getIt.registerFactory<WishlistCubit>(
+  () => WishlistCubit(
+    getIt<WishlistRepo>(),
   ),
 );
 }
