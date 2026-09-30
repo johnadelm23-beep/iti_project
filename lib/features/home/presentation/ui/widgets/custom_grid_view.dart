@@ -1,48 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iti_training/core/theme/app_colors.dart';
+import 'package:iti_training/features/home/data/models/movie_model.dart';
 
 class MoviesGridView extends StatelessWidget {
-  const MoviesGridView({super.key});
+  final List<MovieModel> movies;
 
-  static const List<Map<String, dynamic>> movies = [
-    {
-      'title': 'Inception',
-      'rating': 8.8,
-      'image':
-          'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg',
-    },
-    {
-      'title': 'Interstellar',
-      'rating': 8.7,
-      'image':
-          'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
-    },
-    {
-      'title': 'The Dark Knight',
-      'rating': 9.0,
-      'image':
-          'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
-    },
-    {
-      'title': 'Avatar',
-      'rating': 7.6,
-      'image':
-          'https://image.tmdb.org/t/p/w500/kyeqWdyUXW608qlYkRqosgbbJyK.jpg',
-    },
-    {
-      'title': 'Avengers',
-      'rating': 8.0,
-      'image':
-          'https://image.tmdb.org/t/p/w500/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg',
-    },
-    {
-      'title': 'Joker',
-      'rating': 8.1,
-      'image':
-          'https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg',
-    },
-  ];
+  const MoviesGridView({
+    super.key,
+    required this.movies,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +43,7 @@ class MoviesGridView extends StatelessWidget {
             children: [
               Expanded(
                 child: Image.network(
-                  movie['image'],
+                  movie.posterUrl,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
@@ -97,7 +64,7 @@ class MoviesGridView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      movie['title'],
+                      movie.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -116,7 +83,7 @@ class MoviesGridView extends StatelessWidget {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          movie['rating'].toString(),
+                          movie.rating.toStringAsFixed(1),
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: AppColors.textPrimary,

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iti_training/core/theme/app_colors.dart';
 import 'package:iti_training/features/home/presentation/ui/screens/home_screen.dart';
 import 'package:iti_training/features/profile/presentation/ui/screens/profile_screen.dart';
-import 'package:iti_training/features/search/presentation/ui/screens/search_screen.dart';
 import 'package:iti_training/features/wishlist/presentation/ui/screens/wishlist_screen.dart';
 
 class MainShellScreen extends StatefulWidget {
@@ -18,7 +17,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
 
   static const List<Widget> _pages = [
     HomeScreen(),
-    SearchScreen(),
+    // SearchScreen(),
     WishlistScreen(),
     ProfileScreen(),
   ];
@@ -68,11 +67,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
                 activeIcon: Icon(Icons.home_rounded),
                 label: 'Home',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search_outlined),
-                activeIcon: Icon(Icons.search_rounded),
-                label: 'Search',
-              ),
+             
               BottomNavigationBarItem(
                 icon: Icon(Icons.bookmark_outline_rounded),
                 activeIcon: Icon(Icons.bookmark_rounded),

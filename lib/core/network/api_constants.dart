@@ -7,5 +7,12 @@ class ApiConstants {
   static const String upcomingMovies = '/movie/upcoming';
   static const String trendingMovies = '/trending/movie/day';
 
-  static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  static const String searchMovies = '/search/movie';
+
+  static const String imageBaseUrl =
+      'https://image.tmdb.org/t/p/w500';
+
+  static String movieDetails(int movieId) {
+    return '/movie/$movieId';
+  }
 }
